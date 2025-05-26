@@ -2,6 +2,7 @@
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
+#include "Pin.h"
 #include <conio.h>
 
 struct Angles
@@ -45,10 +46,19 @@ void drawObjects()
     glPopMatrix();
 }
 
+
+
 void renderMinimap()
 {
+    Pin pin;
+    float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
+    float circleRadiusPin = 0.03f;
+    float coneHeightPin = 0.07f;
+
+
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
     glViewport(600, 600, 200, 200); // Minimapa en esquina superior derecha
+    
 
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
@@ -61,38 +71,19 @@ void renderMinimap()
 
     // Cámara desde arriba mirando hacia abajo
     gluLookAt(
-        0.0, 5.0, 0.0,   // posición de la cámara (elevada en Y)
-        0.0, 0.0, 0.0,   // mirando hacia el origen
-        0.0, 0.0, -1.0   // "arriba" es hacia -Z (por estar mirando desde Y)
+        0.0, 5.0, 0.0,   // posición de la cámara (elevada)
+        0.0, 0.0, 0.0,    // hacia dónde mira
+        0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
     );
 
-    drawObjects(); // Renderiza la isla y otros objetos
-
-    // --- Dibujo del marcador estilo Google Maps ---
-    glPushMatrix();
-
-    // Colocamos el marcador justo en el origen (centro del minimapa)
-    glTranslatef(0.0f, 0.0f, 0.0f);
-
-    // Color rojo intenso para el marcador
-    glColor3f(1.0f, 0.0f, 0.0f);
-
-    // Dibujar esfera (base del marcador)
-    glutSolidSphere(0.05f, 20, 20);  // radio, slices, stacks
-
-    // Dibujar cono (punta del marcador)
-    glTranslatef(0.0f, 0.0f, 0.05f);  // justo encima de la esfera
-    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f); // para que el cono apunte hacia arriba
-    glutSolidCone(0.04f, 0.1f, 20, 20); // radio base, altura, slices, stacks
-
+    drawObjects(); // Renderiza sin transformaciones de cámara
+    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin);
+    
     glPopMatrix();
-
-    glPopMatrix(); // MODELVIEW
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
-    glPopAttrib(); // Restaura el viewport original
+    glPopAttrib(); // Restaura el viewport original*/
 }
-
 
 
 int init(void)

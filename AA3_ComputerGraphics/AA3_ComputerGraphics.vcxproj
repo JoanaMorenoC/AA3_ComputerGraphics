@@ -132,6 +132,7 @@
     <ClInclude Include="Lighthouse.h" />
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Pin.h" />
     <ClInclude Include="RotatingLight.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Tree.h" />
