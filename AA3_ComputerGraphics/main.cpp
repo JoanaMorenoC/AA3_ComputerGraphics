@@ -35,10 +35,50 @@ void lighting()
     island.GetLighthouse().light();
 }
 
+void drawObjects()
+{
+    glPushMatrix();
+    island.RenderAllContents();
+    sun.Render();
+    moon.Render();
+    glPopMatrix();
+}
+
+void renderMinimap()
+{
+    glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
+    glViewport(600, 600, 200, 200); // Minimapa en esquina superior derecha
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyección con perspectiva
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    // Cámara desde arriba mirando hacia abajo
+    gluLookAt(
+        0.0, 5.0, 0.0,   // posición de la cámara (elevada)
+        0.0, 0.0, 0.0,    // hacia dónde mira
+        0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
+    );
+
+    drawObjects(); // Renderiza sin transformaciones de cámara
+
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glPopAttrib(); // Restaura el viewport original*/
+}
+
+
 int init(void)
 {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -56,6 +96,7 @@ int init(void)
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
+
     sun.InitLighting();
     moon.InitLighting();
 
@@ -69,25 +110,23 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-
-    lighting();
-
-
-    float diffuse[4] = { 0.65f, 0.0f, 0.0f, 1.0f };
-    float specular[4] = { 0.9f, 0.9f, 0.9f, 1.0f };
-    float shininess = 1;
-
-    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
-    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
-
+    // --- Cámara principal ---
     glMatrixMode(GL_MODELVIEW);
-
     glPushMatrix();
 
     glRotatef(cameraAngles.beta, 0, 1, 0);
     glRotatef(cameraAngles.alpha, 1, 0, 0);
     glScalef(cameraAngles.delta, cameraAngles.delta, cameraAngles.delta);
+
+    lighting(); // <- ahora aquí, después de colocar la cámara principal
+
+    // Materiales
+    float diffuse[4] = { 0.65f, 0.0f, 0.0f, 1.0f };
+    float specular[4] = { 0.9f, 0.9f, 0.9f, 1.0f };
+    float shininess = 1;
+    glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
+    glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
     island.RenderAllContents();
     sun.Render();
@@ -95,8 +134,12 @@ void display()
 
     glPopMatrix();
 
+    // --- Minimapa ---
+    renderMinimap();
+
     glFlush();
 }
+
 
 void keyPressed_special(int key, int x, int y)
 {
