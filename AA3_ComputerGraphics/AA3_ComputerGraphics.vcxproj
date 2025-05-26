@@ -131,6 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Building.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Island.h" />
     <ClInclude Include="Lighthouse.h" />
     <ClInclude Include="Moon.h" />
@@ -138,6 +139,7 @@
     <ClInclude Include="RotatingLight.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Tree.h" />
+    <ClInclude Include="Vector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

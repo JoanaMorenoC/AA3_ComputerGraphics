@@ -1,19 +1,10 @@
 #include <GL/glut.h>
+#include "Camera.h"
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
 
-struct Angles
-{
-    float alpha = 0;
-    float delta = 0.1;
-    float beta = 0;
-};
-
-Angles defaultView = { 0, 0.86776, -275 };
-Angles downView = { -5, 0.86776, -360 };
-Angles topView = { 15, 0.780984, -375 };
-Angles cameraAngles = defaultView;
+Camera camera;
 
 Island island;
 Lighthouse lighthouse;
@@ -48,7 +39,7 @@ int init(void)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-2.0, 2.0, -2.0, 2.0, -20.0, 20.0);
+    gluPerspective(45.0, 1280.0 / 720.0, 1.0, 100.0);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT1);
@@ -82,12 +73,11 @@ void display()
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
 
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    camera.ApplyView();
 
     glPushMatrix();
-
-    glRotatef(cameraAngles.beta, 0, 1, 0);
-    glRotatef(cameraAngles.alpha, 1, 0, 0);
-    glScalef(cameraAngles.delta, cameraAngles.delta, cameraAngles.delta);
 
     island.RenderAllContents();
     sun.Render();
@@ -98,24 +88,47 @@ void display()
     glFlush();
 }
 
+void keyPressed(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 'w':
+    case 'W':
+        camera.moveForward();
+        break;
+    case 's':
+    case 'S':
+        camera.moveBackward();
+        break;
+    case 'a':
+    case 'A':
+        camera.moveLeft();
+        break;
+    case 'd':
+    case 'D':
+        camera.moveRight();
+        break;
+    }
+    glutPostRedisplay();
+}
+
 void keyPressed_special(int key, int x, int y)
 {
     switch (key)
     {
     case GLUT_KEY_LEFT:
-        cameraAngles = defaultView;
-        island.SetWaterSize(10.f);
+        camera.rotateYaw(-2.0f);
         break;
     case GLUT_KEY_RIGHT:
-        cameraAngles = topView;
-        island.SetWaterSize(10.f);
+        camera.rotateYaw(2.0f);
+        break;
+    case GLUT_KEY_UP:
+        camera.rotatePitch(2.0f);
         break;
     case GLUT_KEY_DOWN:
-        cameraAngles = downView;
-        island.SetWaterSize(3.5f);
+        camera.rotatePitch(-2.0f);
         break;
     }
-
     glutPostRedisplay();
 }
 
@@ -123,7 +136,7 @@ int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 800);
+    glutInitWindowSize(1280, 720);
     glutCreateWindow("Illumination model");
 
     init();

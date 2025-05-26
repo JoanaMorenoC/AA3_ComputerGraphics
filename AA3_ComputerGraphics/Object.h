@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector3.h"
 #include <GL/glut.h>
 
 void DrawCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
@@ -28,32 +29,6 @@ void DrawSphereSlice(float sphereRadius, float sliceHeight, int slices, int stac
 	gluDeleteQuadric(quad);
 	glPopMatrix();
 }
-
-struct Vector3
-{
-	float x;
-	float y;
-	float z;
-
-	Vector3()
-	{
-		x = 0;
-		y = 0;
-		z = 0;
-	}
-
-	Vector3(float newX, float newY, float newZ)
-	{
-		x = newX;
-		y = newY;
-		z = newZ;
-	}
-
-	Vector3 operator+(const Vector3& other) const
-	{
-		return Vector3(x + other.x, y + other.y, z + other.z);
-	}
-};
 
 struct Color
 {
