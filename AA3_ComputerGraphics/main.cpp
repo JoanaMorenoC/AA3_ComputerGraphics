@@ -2,6 +2,7 @@
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
+#include <conio.h>
 
 struct Angles
 {
@@ -60,18 +61,38 @@ void renderMinimap()
 
     // Cámara desde arriba mirando hacia abajo
     gluLookAt(
-        0.0, 5.0, 0.0,   // posición de la cámara (elevada)
-        0.0, 0.0, 0.0,    // hacia dónde mira
-        0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
+        0.0, 5.0, 0.0,   // posición de la cámara (elevada en Y)
+        0.0, 0.0, 0.0,   // mirando hacia el origen
+        0.0, 0.0, -1.0   // "arriba" es hacia -Z (por estar mirando desde Y)
     );
 
-    drawObjects(); // Renderiza sin transformaciones de cámara
+    drawObjects(); // Renderiza la isla y otros objetos
+
+    // --- Dibujo del marcador estilo Google Maps ---
+    glPushMatrix();
+
+    // Colocamos el marcador justo en el origen (centro del minimapa)
+    glTranslatef(0.0f, 0.0f, 0.0f);
+
+    // Color rojo intenso para el marcador
+    glColor3f(1.0f, 0.0f, 0.0f);
+
+    // Dibujar esfera (base del marcador)
+    glutSolidSphere(0.05f, 20, 20);  // radio, slices, stacks
+
+    // Dibujar cono (punta del marcador)
+    glTranslatef(0.0f, 0.0f, 0.05f);  // justo encima de la esfera
+    glRotatef(-90.0f, 1.0f, 0.0f, 0.0f); // para que el cono apunte hacia arriba
+    glutSolidCone(0.04f, 0.1f, 20, 20); // radio base, altura, slices, stacks
 
     glPopMatrix();
+
+    glPopMatrix(); // MODELVIEW
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
-    glPopAttrib(); // Restaura el viewport original*/
+    glPopAttrib(); // Restaura el viewport original
 }
+
 
 
 int init(void)
@@ -162,6 +183,17 @@ void keyPressed_special(int key, int x, int y)
     glutPostRedisplay();
 }
 
+void keyPressed(unsigned char key, int x, int y)
+{
+    if (key == 'e' || key == 'E') 
+    {
+        island.GetLighthouse().activeLighthouse = !island.GetLighthouse().activeLighthouse;
+    }
+
+    glutPostRedisplay();
+}
+
+
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
@@ -172,6 +204,7 @@ int main(int argc, char** argv)
     init();
     glutDisplayFunc(display);
     glutSpecialFunc(keyPressed_special);
+    glutKeyboardFunc(keyPressed);
     glutTimerFunc(100, timer, 0);
     glutMainLoop();
 
