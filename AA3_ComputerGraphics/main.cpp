@@ -11,12 +11,48 @@ Lighthouse lighthouse;
 Sun sun;
 Moon moon;
 
-void timer(int value)
+bool keyStates[256] = { false };
+bool specialKeyStates[256] = { false };
+bool shiftPressed = false;
+
+const float CAMERA_ROTATION_SPEED = 1.f;
+
+void updateCamera()
+{
+
+    if (keyStates['w'] || keyStates['W'])
+        camera.MoveForward();
+    if (keyStates['s'] || keyStates['S'])
+        camera.MoveBackward();
+    if (keyStates['a'] || keyStates['A'])
+        camera.MoveLeft();
+    if (keyStates['d'] || keyStates['D'])
+        camera.MoveRight();
+
+    if (specialKeyStates[GLUT_KEY_LEFT])
+        camera.RotateYaw(-CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_RIGHT])
+        camera.RotateYaw(CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_UP])
+        camera.RotatePitch(CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_DOWN])
+        camera.RotatePitch(-CAMERA_ROTATION_SPEED);
+}
+
+void dayNightCycleTimer(int value)
 {
     sun.Rotate();
     moon.Rotate();
+
     glutPostRedisplay();
-    glutTimerFunc(50, timer, 0);
+    glutTimerFunc(50, dayNightCycleTimer, 0);
+}
+
+void gameplayTimer(int value)
+{
+    updateCamera();
+    glutPostRedisplay();
+    glutTimerFunc(16, gameplayTimer, 0);
 }
 
 void lighting()
@@ -88,48 +124,24 @@ void display()
     glFlush();
 }
 
-void keyPressed(unsigned char key, int x, int y)
+void keyDown(unsigned char key, int x, int y)
 {
-    switch (key)
-    {
-    case 'w':
-    case 'W':
-        camera.moveForward();
-        break;
-    case 's':
-    case 'S':
-        camera.moveBackward();
-        break;
-    case 'a':
-    case 'A':
-        camera.moveLeft();
-        break;
-    case 'd':
-    case 'D':
-        camera.moveRight();
-        break;
-    }
-    glutPostRedisplay();
+    keyStates[key] = true;
 }
 
-void keyPressed_special(int key, int x, int y)
+void keyUp(unsigned char key, int x, int y)
 {
-    switch (key)
-    {
-    case GLUT_KEY_LEFT:
-        camera.rotateYaw(-2.0f);
-        break;
-    case GLUT_KEY_RIGHT:
-        camera.rotateYaw(2.0f);
-        break;
-    case GLUT_KEY_UP:
-        camera.rotatePitch(2.0f);
-        break;
-    case GLUT_KEY_DOWN:
-        camera.rotatePitch(-2.0f);
-        break;
-    }
-    glutPostRedisplay();
+    keyStates[key] = false;
+}
+
+void specialKeyDown(int key, int x, int y)
+{
+    specialKeyStates[key] = true;
+}
+
+void specialKeyUp(int key, int x, int y)
+{
+    specialKeyStates[key] = false;
 }
 
 int main(int argc, char** argv)
@@ -141,8 +153,15 @@ int main(int argc, char** argv)
 
     init();
     glutDisplayFunc(display);
-    glutSpecialFunc(keyPressed_special);
-    glutTimerFunc(100, timer, 0);
+
+    glutKeyboardFunc(keyDown);
+    glutKeyboardUpFunc(keyUp);
+    glutSpecialFunc(specialKeyDown);
+    glutSpecialUpFunc(specialKeyUp);
+
+    glutTimerFunc(100, dayNightCycleTimer, 0);
+    glutTimerFunc(16, gameplayTimer, 0);
+
     glutMainLoop();
 
     return 0;
