@@ -75,7 +75,7 @@ int init(void)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(45.0, 1280.0 / 720.0, 1.0, 100.0);
+    gluPerspective(45.0, 1280.0 / 720.0, 0.05, 100.0);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT1);
