@@ -4,19 +4,19 @@
 
 class Pin
 {
-    void drawCircle(float radius, int segments, bool filled = false)
+    void drawCircle(float radius, int segments, bool filled, float posXZ[2])
     {
         if (filled)
-            glBegin(GL_POLYGON); // círculo sólido
+            glBegin(GL_POLYGON); 
         else
-            glBegin(GL_LINE_LOOP); // solo borde
+            glBegin(GL_LINE_LOOP); 
 
         for (int i = 0; i < segments; ++i)
         {
             float angle = 2.0f * 3.1415926f * float(i) / float(segments);
             float x = radius * cosf(angle);
             float z = radius * sinf(angle);
-            glVertex3f(x, 4.f, z); // plano XZ (y=0)
+            glVertex3f(posXZ[0] + x, 4.f, posXZ[1] + z);
         }
 
         glEnd();
@@ -26,7 +26,8 @@ public:
     void drawMapPin(
         float circleRadius,
         float coneHeight,
-        const float color[3]
+        const float color[3],
+        float posXZ[2]
     )
     {
         glPushAttrib(GL_LIGHTING_BIT);
@@ -35,13 +36,13 @@ public:
         int circleSegments = 16;
         glPushMatrix();
         glColor3fv(color);
-        drawCircle(circleRadius, circleSegments, true);
+        drawCircle(circleRadius, circleSegments, true, posXZ);
         glPopMatrix();
 
         // --- Dibuja el cono apuntando hacia abajo ---
         glPushMatrix();
         glColor3fv(color);
-        glTranslatef(0.0f, 4.0f, 0.0f);
+        glTranslatef(posXZ[0], 4.0f, posXZ[1]);
         glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);
         glutSolidCone(circleRadius, coneHeight, 20, 20);
         glPopMatrix();

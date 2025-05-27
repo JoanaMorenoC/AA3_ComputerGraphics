@@ -54,6 +54,7 @@ void renderMinimap()
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
     float circleRadiusPin = 0.03f;
     float coneHeightPin = 0.07f;
+    float posXZ[2] = { 0.0f,0.0f };
 
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
@@ -77,7 +78,7 @@ void renderMinimap()
     );
 
     drawObjects(); // Renderiza sin transformaciones de cámara
-    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin);
+    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
     
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
