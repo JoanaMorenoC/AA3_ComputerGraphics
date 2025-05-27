@@ -112,6 +112,7 @@ void display()
     glLoadIdentity();
     
     camera.ApplyView();
+    camera.ApplySpotlight(GL_LIGHT2);
 
     glPushMatrix();
 

@@ -90,4 +90,31 @@ public:
             center.x, center.y, center.z,
             up.x, up.y, up.z);
     }
+
+    void ApplySpotlight(GLenum lightID = GL_LIGHT0)
+    {
+        glEnable(lightID);
+
+        // Posición de la luz (igual a la cámara)
+        GLfloat lightPos[] = { pos.x, pos.y, pos.z, 1.0f };
+        glLightfv(lightID, GL_POSITION, lightPos);
+
+        // Dirección del foco (igual al frente de la cámara)
+        GLfloat spotDirection[] = { front.x, front.y, front.z };
+        glLightfv(lightID, GL_SPOT_DIRECTION, spotDirection);
+
+        // Ángulo del haz (más pequeño = más concentrado)
+        glLightf(lightID, GL_SPOT_CUTOFF, 15.0f); // de 0 a 90 o 180 (180 = luz normal)
+
+        // Atenuación opcional (cómo cae la luz con la distancia)
+        glLightf(lightID, GL_CONSTANT_ATTENUATION, 0.5f);
+        glLightf(lightID, GL_LINEAR_ATTENUATION, 0.05f);
+        glLightf(lightID, GL_QUADRATIC_ATTENUATION, 0.01f);
+
+        // Color de la luz
+        GLfloat lightDiffuse[] = { 0.03f, 0.03f, 0.02f, 1.0f }; 
+        GLfloat lightSpecular[] = { 0.002f, 0.002f, 0.002f, 1.0f };
+        glLightfv(lightID, GL_DIFFUSE, lightDiffuse);
+        glLightfv(lightID, GL_SPECULAR, lightSpecular);
+    }
 };
