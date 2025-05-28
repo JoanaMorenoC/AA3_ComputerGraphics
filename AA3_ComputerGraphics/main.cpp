@@ -15,7 +15,7 @@ bool keyStates[256] = { false };
 bool specialKeyStates[256] = { false };
 bool shiftPressed = false;
 
-const float CAMERA_ROTATION_SPEED = 1.f;
+const float CAMERA_ROTATION_SPEED = 1.5f;
 
 void updateCamera()
 {
@@ -86,8 +86,7 @@ int init(void)
     sun.InitLighting();
     moon.InitLighting();
 
-    island.Init();
-    island.SetScale(0.2f);
+    island.Init(3.f);
 
     return 0;
 }

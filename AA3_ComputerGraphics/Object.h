@@ -14,6 +14,27 @@ void DrawCylinder(float baseRadius, float topRadius, float height, int slices, i
 	glPopMatrix();
 }
 
+void DrawClosedCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+	glPushMatrix();
+
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+
+	GLUquadric* quad = gluNewQuadric();
+	gluQuadricNormals(quad, GLU_SMOOTH);
+
+	gluDisk(quad, 0.0f, baseRadius, slices, 1);
+	gluCylinder(quad, baseRadius, topRadius, height, slices, stacks);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, height);
+	gluDisk(quad, 0.0f, topRadius, slices, 1);
+	glPopMatrix();
+
+	gluDeleteQuadric(quad);
+
+	glPopMatrix();
+}
+
 void DrawSphereSlice(float sphereRadius, float sliceHeight, int slices, int stacks) {
 	glPushMatrix();
 	glTranslatef(0.0, sphereRadius, 0.0f);

@@ -17,40 +17,40 @@ class Island : public Object
     Lighthouse lighthouse;
     Building building;
     std::vector<Tree> trees;
-    const int TREES_AMOUNT = 12;
+    const int TREES_AMOUNT = 20;
 
     float waterSize = 10.f;
+    Vector3 rockScale;
 
-    Vector3 GetRandomPositionInsideGrass(float minRadius, float maxRadius)
+    Vector3 GetRandomPositionInsideGrass(float height, float minRadius, float maxRadius)
     {
-        float minHeight = 0.2f;
-        float maxHeight = 0.08f;
-
         float radius = minRadius + (maxRadius - minRadius) * std::sqrt(static_cast<float>(std::rand()) / RAND_MAX);
         float angle = static_cast<float>(std::rand()) / RAND_MAX * 2.0f * 3.14159265f;
 
         float x = radius * std::cos(angle);
         float z = radius * std::sin(angle);
-
-
-        float y = minHeight - (radius - minRadius) / (maxRadius - minRadius) * (minHeight - maxHeight);
+        float y = height;
 
         return Vector3(x, y, z);
     }
 public:
-    void Init()
+    void Init(float totalScale)
     {
-        lighthouse.SetPos(pos + Vector3(0.f, 0.08f, 0.f));
-        lighthouse.SetScale(0.1f);
-        building.SetPos(GetRandomPositionInsideGrass(0.6f, 1.2f));
-        building.SetScale(0.5f);
+        SetScale(totalScale * 0.2f);
+
+        float islandFloorHeight = totalScale * 0.1f;
+        lighthouse.SetPos(pos + Vector3(0.f, islandFloorHeight, 0.f));
+        lighthouse.SetScale(totalScale * 0.1f);
+        building.SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.6f, totalScale * 1.2f));
+        building.SetScale(totalScale * 0.5f);
+        rockScale = Vector3(1.0f, 0.5f, 0.8f);
 
         for (int i = 0; i < TREES_AMOUNT; i++)
         {
             Tree tree;
-            tree.SetScale(0.1f);
+            tree.SetScale(totalScale * 0.06f);
 
-            tree.SetPos(GetRandomPositionInsideGrass(0.3f, 1.4f));
+            tree.SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f));
             trees.push_back(tree);
         }
     }
@@ -73,7 +73,7 @@ public:
         SetColor(SAND);
         glTranslatef(0.0f, -2.0f, 0.0f);
         glScalef(10.0f, 2.5f, 10.0f); 
-        glutSolidSphere(1.0, 32, 32);
+        DrawClosedCylinder(1.0, 1.0, 1.0, 32, 32);
         glPopMatrix();
 
         // --- Grass ---
@@ -81,14 +81,14 @@ public:
         SetColor(GRASS);
         glTranslatef(0.0f, -1.3f, 0.0f); 
         glScalef(9.0f, 1.8f, 9.0f);     
-        glutSolidSphere(1.0, 32, 32);
+        DrawClosedCylinder(1.0, 1.0, 1.01, 32, 32);
         glPopMatrix();
 
         // --- Rock ---
         glPushMatrix();
         glTranslatef(-4.0f, 0.0f, -3.0f);
         SetColor(ROCK);
-        glScalef(1.0f, 0.5f, 0.8f);
+        glScalef(rockScale.x, rockScale.y, rockScale.z);
         glutSolidDodecahedron();
         glPopMatrix();
 

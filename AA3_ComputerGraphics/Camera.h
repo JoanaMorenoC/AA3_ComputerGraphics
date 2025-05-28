@@ -18,7 +18,7 @@ private:
     float yaw;
     float pitch;
 
-    const float CAMERA_MOVEMENT_SPEED = 0.01f;
+    const float CAMERA_MOVEMENT_SPEED = 0.015f;
 
     void UpdateCameraVectors()
     {
@@ -36,7 +36,7 @@ private:
     }
 
 public:
-    Camera(Vector3 startPos = Vector3(0.0f, 0.0f, 5.0f),
+    Camera(Vector3 startPos = Vector3(0.0f, 0.5f, 5.0f),
         Vector3 startUp = Vector3(0.0f, 1.0f, 0.0f),
         float startYaw = -90.0f,
         float startPitch = 0.0f)
