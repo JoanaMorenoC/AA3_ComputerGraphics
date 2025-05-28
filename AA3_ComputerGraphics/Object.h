@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector3.h"
 #include <GL/glut.h>
 
 void DrawCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
@@ -8,6 +9,27 @@ void DrawCylinder(float baseRadius, float topRadius, float height, int slices, i
 	GLUquadric* quad = gluNewQuadric();
 	gluQuadricNormals(quad, GLU_SMOOTH);
 	gluCylinder(quad, baseRadius, topRadius, height, slices, stacks);
+	gluDeleteQuadric(quad);
+
+	glPopMatrix();
+}
+
+void DrawClosedCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+	glPushMatrix();
+
+	glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
+
+	GLUquadric* quad = gluNewQuadric();
+	gluQuadricNormals(quad, GLU_SMOOTH);
+
+	gluDisk(quad, 0.0f, baseRadius, slices, 1);
+	gluCylinder(quad, baseRadius, topRadius, height, slices, stacks);
+
+	glPushMatrix();
+	glTranslatef(0.0f, 0.0f, height);
+	gluDisk(quad, 0.0f, topRadius, slices, 1);
+	glPopMatrix();
+
 	gluDeleteQuadric(quad);
 
 	glPopMatrix();
@@ -28,32 +50,6 @@ void DrawSphereSlice(float sphereRadius, float sliceHeight, int slices, int stac
 	gluDeleteQuadric(quad);
 	glPopMatrix();
 }
-
-struct Vector3
-{
-	float x;
-	float y;
-	float z;
-
-	Vector3()
-	{
-		x = 0;
-		y = 0;
-		z = 0;
-	}
-
-	Vector3(float newX, float newY, float newZ)
-	{
-		x = newX;
-		y = newY;
-		z = newZ;
-	}
-
-	Vector3 operator+(const Vector3& other) const
-	{
-		return Vector3(x + other.x, y + other.y, z + other.z);
-	}
-};
 
 struct Color
 {
