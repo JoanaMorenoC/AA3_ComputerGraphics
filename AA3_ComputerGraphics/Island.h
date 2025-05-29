@@ -43,8 +43,13 @@ public:
         SetScale(totalScale * 0.2f);
 
         float islandFloorHeight = totalScale * 0.1f;
-        lighthouse.SetPos(pos + Vector3(0.f, islandFloorHeight, 0.f));
+
+        Vector3 lighthousePos = pos + Vector3(0.f, islandFloorHeight, 0.f);
+        lighthouse.SetPos(lighthousePos);
         lighthouse.SetScale(totalScale * 0.1f);
+        colliders.push_back(lighthouse.GetCollider());
+        lighthouse.GetCollider()->SetPos(lighthousePos);
+
         building.SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.6f, totalScale * 1.2f));
         building.SetScale(totalScale * 0.5f);
         rockScale = Vector3(1.0f, 0.5f, 0.8f);

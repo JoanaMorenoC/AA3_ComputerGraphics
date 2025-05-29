@@ -11,7 +11,6 @@ class Lighthouse : public Object
 
     float intensityLight = 0.05;
         
-
     void DrawLighthouseBody(float baseRadius, float topRadius, float height, int stripesAmount)
     {
         glPushMatrix();
@@ -36,6 +35,8 @@ class Lighthouse : public Object
         glPopMatrix();
     }
 public:
+    Lighthouse()
+        : Object(new CylinderCollider(pos, 1.5f)) {}
 
     bool activeLighthouse = true;
 
