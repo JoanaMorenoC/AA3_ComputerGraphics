@@ -127,4 +127,9 @@ public:
         glLightfv(lightID, GL_DIFFUSE, lightDiffuse);
         glLightfv(lightID, GL_SPECULAR, lightSpecular);
     }
+
+    Vector3 GetPosition()
+    {
+        return pos;
+    }
 };
