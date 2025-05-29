@@ -1,33 +1,60 @@
 #include <GL/glut.h>
+#include "Camera.h"
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
 #include "Pin.h"
 #include <conio.h>
 
-struct Angles
-{
-    float alpha = 0;
-    float delta = 0.1;
-    float beta = 0;
-};
-
-Angles defaultView = { 0, 0.86776, -275 };
-Angles downView = { -5, 0.86776, -360 };
-Angles topView = { 15, 0.780984, -375 };
-Angles cameraAngles = defaultView;
+Camera camera;
 
 Island island;
 Lighthouse lighthouse;
 Sun sun;
 Moon moon;
 
-void timer(int value)
+bool keyStates[256] = { false };
+bool specialKeyStates[256] = { false };
+bool shiftPressed = false;
+
+const float CAMERA_ROTATION_SPEED = 1.5f;
+
+void updateCamera()
+{
+
+    if (keyStates['w'] || keyStates['W'])
+        camera.MoveForward();
+    if (keyStates['s'] || keyStates['S'])
+        camera.MoveBackward();
+    if (keyStates['a'] || keyStates['A'])
+        camera.MoveLeft();
+    if (keyStates['d'] || keyStates['D'])
+        camera.MoveRight();
+
+    if (specialKeyStates[GLUT_KEY_LEFT])
+        camera.RotateYaw(-CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_RIGHT])
+        camera.RotateYaw(CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_UP])
+        camera.RotatePitch(CAMERA_ROTATION_SPEED);
+    if (specialKeyStates[GLUT_KEY_DOWN])
+        camera.RotatePitch(-CAMERA_ROTATION_SPEED);
+}
+
+void dayNightCycleTimer(int value)
 {
     sun.Rotate();
     moon.Rotate();
+
     glutPostRedisplay();
-    glutTimerFunc(50, timer, 0);
+    glutTimerFunc(50, dayNightCycleTimer, 0);
+}
+
+void gameplayTimer(int value)
+{
+    updateCamera();
+    glutPostRedisplay();
+    glutTimerFunc(16, gameplayTimer, 0);
 }
 
 void lighting()
@@ -52,32 +79,32 @@ void renderMinimap()
 {
     Pin pin;
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 0.03f;
+    float circleRadiusPin = 2.f;
     float coneHeightPin = 0.07f;
     float posXZ[2] = { 0.0f,0.0f };
 
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
-    glViewport(600, 600, 200, 200); // Minimapa en esquina superior derecha
+    glViewport(1280.0-200, 720-200, 200, 200); // Minimapa en esquina superior derecha
     
 
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyección con perspectiva
+    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyecciï¿½n con perspectiva
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
 
-    // Cámara desde arriba mirando hacia abajo
+    // Cï¿½mara desde arriba mirando hacia abajo
     gluLookAt(
-        0.0, 5.0, 0.0,   // posición de la cámara (elevada)
-        0.0, 0.0, 0.0,    // hacia dónde mira
+        0.0, 12.0, 0.0,   // posiciï¿½n de la cï¿½mara (elevada)
+        0.0, 0.0, 0.0,    // hacia dï¿½nde mira
         0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
     );
 
-    drawObjects(); // Renderiza sin transformaciones de cámara
+    drawObjects(); // Renderiza sin transformaciones de cï¿½mara
     pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
     
     glPopMatrix();
@@ -101,7 +128,7 @@ int init(void)
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-2.0, 2.0, -2.0, 2.0, -20.0, 20.0);
+    gluPerspective(45.0, 1280.0 / 720.0, 0.05, 100.0);
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT1);
@@ -113,8 +140,7 @@ int init(void)
     sun.InitLighting();
     moon.InitLighting();
 
-    island.Init();
-    island.SetScale(0.2f);
+    island.Init(3.f);
 
     return 0;
 }
@@ -123,15 +149,11 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // --- Cámara principal ---
+    // --- Cï¿½mara principal ---
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
-    glRotatef(cameraAngles.beta, 0, 1, 0);
-    glRotatef(cameraAngles.alpha, 1, 0, 0);
-    glScalef(cameraAngles.delta, cameraAngles.delta, cameraAngles.delta);
-
-    lighting(); // <- ahora aquí, después de colocar la cámara principal
+    lighting(); // <- ahora aquï¿½, despuï¿½s de colocar la cï¿½mara principal
 
     // Materiales
     float diffuse[4] = { 0.65f, 0.0f, 0.0f, 1.0f };
@@ -140,6 +162,14 @@ void display()
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+    
+    camera.ApplyView();
+    camera.ApplySpotlight(GL_LIGHT2);
+
+    glPushMatrix();
 
     island.RenderAllContents();
     sun.Render();
@@ -153,51 +183,44 @@ void display()
     glFlush();
 }
 
-
-void keyPressed_special(int key, int x, int y)
+void keyDown(unsigned char key, int x, int y)
 {
-    switch (key)
-    {
-    case GLUT_KEY_LEFT:
-        cameraAngles = defaultView;
-        island.SetWaterSize(10.f);
-        break;
-    case GLUT_KEY_RIGHT:
-        cameraAngles = topView;
-        island.SetWaterSize(10.f);
-        break;
-    case GLUT_KEY_DOWN:
-        cameraAngles = downView;
-        island.SetWaterSize(3.5f);
-        break;
-    }
-
-    glutPostRedisplay();
+    keyStates[key] = true;
 }
 
-void keyPressed(unsigned char key, int x, int y)
+void keyUp(unsigned char key, int x, int y)
 {
-    if (key == 'e' || key == 'E') 
-    {
-        island.GetLighthouse().activeLighthouse = !island.GetLighthouse().activeLighthouse;
-    }
-
-    glutPostRedisplay();
+    keyStates[key] = false;
 }
 
+void specialKeyDown(int key, int x, int y)
+{
+    specialKeyStates[key] = true;
+}
+
+void specialKeyUp(int key, int x, int y)
+{
+    specialKeyStates[key] = false;
+}
 
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 800);
+    glutInitWindowSize(1280, 720);
     glutCreateWindow("Illumination model");
 
     init();
     glutDisplayFunc(display);
-    glutSpecialFunc(keyPressed_special);
-    glutKeyboardFunc(keyPressed);
-    glutTimerFunc(100, timer, 0);
+
+    glutKeyboardFunc(keyDown);
+    glutKeyboardUpFunc(keyUp);
+    glutSpecialFunc(specialKeyDown);
+    glutSpecialUpFunc(specialKeyUp);
+
+    glutTimerFunc(100, dayNightCycleTimer, 0);
+    glutTimerFunc(16, gameplayTimer, 0);
+
     glutMainLoop();
 
     return 0;

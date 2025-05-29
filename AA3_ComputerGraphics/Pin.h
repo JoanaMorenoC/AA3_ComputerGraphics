@@ -6,6 +6,7 @@ class Pin
 {
     void drawCircle(float radius, int segments, bool filled, float posXZ[2])
     {
+        float heightIcone = 8.0f;
         if (filled)
             glBegin(GL_POLYGON); 
         else
@@ -16,7 +17,7 @@ class Pin
             float angle = 2.0f * 3.1415926f * float(i) / float(segments);
             float x = radius * cosf(angle);
             float z = radius * sinf(angle);
-            glVertex3f(posXZ[0] + x, 4.f, posXZ[1] + z);
+            glVertex3f(posXZ[0] + x, heightIcone, posXZ[1] + z);
         }
 
         glEnd();

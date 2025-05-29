@@ -13,13 +13,11 @@ public:
 
         ApplyTransformations();
 
-        glPushMatrix();
         // Trunk
         SetColor(BROWN);
-        glTranslatef(0.0f, -1.2f, 0.0f);
         DrawCylinder(0.3f, 0.3f, 1.5f, 16, 16);
-        glPopMatrix();
 
+        glTranslatef(0.0f, 1.2f, 0.0f);
         SetColor(GREEN);
         // Cone 1
         glRotatef(-90.0f, 1.0f, 0.0f, 0.0f);
