@@ -61,12 +61,13 @@ public:
         ApplyTransformations();
 
         // --- Water ---
+        /*
         glPushMatrix();
         SetColor(WATER);
         glTranslatef(0.0f, -1.5f-5.f, 0.0f);
         glScalef(100.0f, waterSize, 100.0f);
         glutSolidCube(1.0);
-        glPopMatrix();
+        glPopMatrix();*/
 
         // --- Sand ---
         glPushMatrix();
@@ -104,7 +105,7 @@ public:
             trees[i].Render();
     }
 
-    Lighthouse GetLighthouse()
+    Lighthouse &GetLighthouse()
     {
         return lighthouse;
     }

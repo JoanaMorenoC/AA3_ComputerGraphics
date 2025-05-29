@@ -3,6 +3,8 @@
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
+#include "Pin.h"
+#include <conio.h>
 
 Camera camera;
 
@@ -62,10 +64,61 @@ void lighting()
     island.GetLighthouse().light();
 }
 
+void drawObjects()
+{
+    glPushMatrix();
+    island.RenderAllContents();
+    sun.Render();
+    moon.Render();
+    glPopMatrix();
+}
+
+
+
+void renderMinimap()
+{
+    Pin pin;
+    float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
+    float circleRadiusPin = 2.f;
+    float coneHeightPin = 0.07f;
+    float posXZ[2] = { 0.0f,0.0f };
+
+
+    glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
+    glViewport(1280.0-200, 720-200, 200, 200); // Minimapa en esquina superior derecha
+    
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyecci�n con perspectiva
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    // C�mara desde arriba mirando hacia abajo
+    gluLookAt(
+        0.0, 12.0, 0.0,   // posici�n de la c�mara (elevada)
+        0.0, 0.0, 0.0,    // hacia d�nde mira
+        0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
+    );
+
+    drawObjects(); // Renderiza sin transformaciones de c�mara
+    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
+    
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+    glPopAttrib(); // Restaura el viewport original*/
+}
+
+
 int init(void)
 {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -83,6 +136,7 @@ int init(void)
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
 
+
     sun.InitLighting();
     moon.InitLighting();
 
@@ -95,14 +149,16 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // --- C�mara principal ---
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
 
-    lighting();
+    lighting(); // <- ahora aqu�, despu�s de colocar la c�mara principal
 
-
+    // Materiales
     float diffuse[4] = { 0.65f, 0.0f, 0.0f, 1.0f };
     float specular[4] = { 0.9f, 0.9f, 0.9f, 1.0f };
     float shininess = 1;
-
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, diffuse);
     glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
     glMaterialf(GL_FRONT, GL_SHININESS, shininess);
@@ -120,6 +176,9 @@ void display()
     moon.Render();
 
     glPopMatrix();
+
+    // --- Minimapa ---
+    renderMinimap();
 
     glFlush();
 }
