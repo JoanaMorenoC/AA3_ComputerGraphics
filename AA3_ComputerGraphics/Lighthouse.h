@@ -36,6 +36,9 @@ class Lighthouse : public Object
         glPopMatrix();
     }
 public:
+
+    bool activeLighthouse = true;
+
     void Render() override
     {
         glPushMatrix();
@@ -85,6 +88,11 @@ public:
 
     void light()
     {
+        if (!activeLighthouse)
+        {
+            glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 0);
+            return;
+        }
         glPushMatrix();
         configurationLight();
 
