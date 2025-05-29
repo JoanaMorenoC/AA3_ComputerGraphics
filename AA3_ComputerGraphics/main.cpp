@@ -79,8 +79,8 @@ void renderMinimap()
 {
     Pin pin;
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 3.f;
-    float coneHeightPin = 0.07f;
+    float circleRadiusPin = 1.f;
+    float coneHeightPin = 1.8f;
     float posXZ[2] = { camera.GetPosition().x,
     camera.GetPosition().z };
 
@@ -123,11 +123,9 @@ int init(void)
     glEnable(GL_DEPTH_TEST);
 
 
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f);
+
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -153,7 +151,7 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // --- C�mara principal ---
-    glMatrixMode(GL_MODELVIEW);
+    //glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     lighting(); // <- ahora aqu�, despu�s de colocar la c�mara principal

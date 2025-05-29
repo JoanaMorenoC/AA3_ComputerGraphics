@@ -6,7 +6,7 @@ class Pin
 {
     void drawCircle(float radius, int segments, bool filled, float posXZ[2])
     {
-        float heightIcone = 8.0f;
+        float heightIcone = 0.5f;
         if (filled)
             glBegin(GL_POLYGON); 
         else
