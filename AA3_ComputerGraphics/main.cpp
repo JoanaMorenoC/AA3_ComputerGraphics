@@ -1,12 +1,12 @@
 #include <GL/glut.h>
-#include "Camera.h"
+#include "Player.h"
 #include "Sun.h"
 #include "Moon.h"
 #include "Island.h"
 #include "Pin.h"
 #include <conio.h>
 
-Camera camera;
+Player player;
 
 Island island;
 Lighthouse lighthouse;
@@ -17,29 +17,6 @@ bool keyStates[256] = { false };
 bool specialKeyStates[256] = { false };
 bool shiftPressed = false;
 
-const float CAMERA_ROTATION_SPEED = 1.5f;
-
-void updateCamera()
-{
-
-    if (keyStates['w'] || keyStates['W'])
-        camera.MoveForward();
-    if (keyStates['s'] || keyStates['S'])
-        camera.MoveBackward();
-    if (keyStates['a'] || keyStates['A'])
-        camera.MoveLeft();
-    if (keyStates['d'] || keyStates['D'])
-        camera.MoveRight();
-
-    if (specialKeyStates[GLUT_KEY_LEFT])
-        camera.RotateYaw(-CAMERA_ROTATION_SPEED);
-    if (specialKeyStates[GLUT_KEY_RIGHT])
-        camera.RotateYaw(CAMERA_ROTATION_SPEED);
-    if (specialKeyStates[GLUT_KEY_UP])
-        camera.RotatePitch(CAMERA_ROTATION_SPEED);
-    if (specialKeyStates[GLUT_KEY_DOWN])
-        camera.RotatePitch(-CAMERA_ROTATION_SPEED);
-}
 
 void dayNightCycleTimer(int value)
 {
@@ -52,7 +29,7 @@ void dayNightCycleTimer(int value)
 
 void gameplayTimer(int value)
 {
-    updateCamera();
+    player.Update(keyStates, specialKeyStates, island.GetColliders());
     glutPostRedisplay();
     glutTimerFunc(16, gameplayTimer, 0);
 }
@@ -166,8 +143,8 @@ void display()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     
-    camera.ApplyView();
-    camera.ApplySpotlight(GL_LIGHT2);
+    player.ApplyView();
+    player.ApplyFlashlight();
 
     glPushMatrix();
 

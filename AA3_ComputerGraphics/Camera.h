@@ -45,6 +45,16 @@ public:
         UpdateCameraVectors();
     }
 
+    Vector3 GetPos()
+    {
+        return pos;
+    }
+
+    void SetPos(Vector3 newPos)
+    {
+        pos = newPos;
+    }
+
     void MoveForward()
     {
         Vector3 horizontalFront = Vector3(front.x, 0.0f, front.z).Normalized();

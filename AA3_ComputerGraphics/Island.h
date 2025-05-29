@@ -1,4 +1,6 @@
 #pragma once
+#define _USE_MATH_DEFINES
+
 #include "Object.h"
 #include "Lighthouse.h"
 #include "Building.h"
@@ -21,6 +23,8 @@ class Island : public Object
 
     float waterSize = 10.f;
     Vector3 rockScale;
+
+    std::vector<Collider*> colliders;
 
     Vector3 GetRandomPositionInsideGrass(float height, float minRadius, float maxRadius)
     {
@@ -50,8 +54,12 @@ public:
             Tree tree;
             tree.SetScale(totalScale * 0.06f);
 
-            tree.SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f));
+            Vector3 position = GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f);
+            tree.SetPos(position);
             trees.push_back(tree);
+
+            colliders.push_back(tree.GetCollider());
+            tree.GetCollider()->SetPos(position);
         }
     }
 
@@ -108,6 +116,11 @@ public:
     Lighthouse &GetLighthouse()
     {
         return lighthouse;
+    }
+
+    std::vector<Collider*> GetColliders()
+    {
+        return colliders;
     }
 
     void SetWaterSize(float newSize)
