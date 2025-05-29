@@ -33,6 +33,7 @@ public:
     {
         glPushAttrib(GL_LIGHTING_BIT);
         glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
         // --- Dibuja el círculo ---
         int circleSegments = 16;
         glPushMatrix();
@@ -47,7 +48,7 @@ public:
         glRotatef(-180.0f, 0.0f, 1.0f, 0.0f);
         glutSolidCone(circleRadius, coneHeight, 20, 20);
         glPopMatrix();
-
+        glEnable(GL_DEPTH_TEST);
         glPopAttrib();
     }
 };

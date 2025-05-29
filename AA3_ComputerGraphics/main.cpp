@@ -79,9 +79,10 @@ void renderMinimap()
 {
     Pin pin;
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 2.f;
+    float circleRadiusPin = 3.f;
     float coneHeightPin = 0.07f;
-    float posXZ[2] = { 0.0f,0.0f };
+    float posXZ[2] = { camera.GetPosition().x,
+    camera.GetPosition().z };
 
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
@@ -91,7 +92,7 @@ void renderMinimap()
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyecci�n con perspectiva
+    glOrtho(-10, 10, -10, 10, -10, 20); // más control
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -105,7 +106,9 @@ void renderMinimap()
     );
 
     drawObjects(); // Renderiza sin transformaciones de c�mara
+    glPushMatrix();
     pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
+    glPopMatrix();
     
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
