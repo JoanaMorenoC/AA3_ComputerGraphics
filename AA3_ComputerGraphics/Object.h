@@ -72,6 +72,8 @@ protected:
 	Vector3 scale;
 	Vector3 rotation;
 
+	CylinderCollider* collider = nullptr;
+
 	void ApplyTransformations()
 	{
 		glTranslatef(pos.x, pos.y, pos.z);
@@ -94,6 +96,17 @@ public:
 		rotation = { 0,0,0 };
 	}
 
+	Object(CylinderCollider* colliderPointer)
+		: pos(0, 0, 0), scale(1, 1, 1), rotation(0, 0, 0), collider(colliderPointer)
+
+	{
+	}
+
+	CylinderCollider* GetCollider()
+	{
+		return collider;
+	}
+
 	void SetPos(float x, float y, float z)
 	{
 		pos.x = x;
@@ -111,6 +124,11 @@ public:
 		scale.x = newScale;
 		scale.y = newScale;
 		scale.z = newScale;
+
+		if (collider != nullptr)
+		{
+			collider->SetScale(newScale);
+		}
 	}
 
 	void SetScale(float x, float y, float z)

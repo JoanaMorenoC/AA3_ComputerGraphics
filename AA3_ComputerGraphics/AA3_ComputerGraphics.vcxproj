@@ -132,10 +132,12 @@
   <ItemGroup>
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CylinderCollider.h" />
     <ClInclude Include="Island.h" />
     <ClInclude Include="Lighthouse.h" />
     <ClInclude Include="Moon.h" />
     <ClInclude Include="Object.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="RotatingLight.h" />
     <ClInclude Include="Sun.h" />
     <ClInclude Include="Tree.h" />
