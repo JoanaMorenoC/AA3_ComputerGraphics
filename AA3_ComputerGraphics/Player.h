@@ -18,7 +18,7 @@ private:
 
 public:
     Player()
-        : collider(pos, 1)
+        : collider(pos, 0.1f)
     {
 
     }
@@ -50,11 +50,9 @@ public:
         }
         fKeyPreviouslyPressed = fPressedNow;
 
-        std::cout << "Camera pos: "<<camera.GetPos().x << " "<< camera.GetPos().y<<std::endl;
-        pos = camera.GetPos();
+        SetPos(camera.GetPos());
 
         CheckCollisions(colliders);
-        camera.SetPos(pos);
 	}
 
     void ApplyFlashlight()
@@ -65,6 +63,13 @@ public:
         }
     }
 
+    void SetPos(Vector3 newPos)
+    {
+        pos = newPos;
+        collider.SetPos(newPos);
+        camera.SetPos(newPos);
+    }
+
     void ApplyView()
     {
         camera.ApplyView();
@@ -72,15 +77,10 @@ public:
 
     void CheckCollisions(std::vector<CylinderCollider*> colliders)
     {
-
         for (int i = 0; i < colliders.size(); i++)
         {
-            std::cout << " I: " << i << std::endl;
-            std::cout << "Player position: " << pos.x << " " << pos.y << std::endl;
-
             collider.CollidesWith(colliders[i]);
         }
-        pos = collider.GetPos();
-        std::cout << std::endl;
+        SetPos(collider.GetPos());
     }
 };

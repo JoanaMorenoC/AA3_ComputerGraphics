@@ -33,10 +33,5 @@ public:
         glutSolidCone(1.0f, 2.0f, 16, 16);
 
         glPopMatrix();
-
-        glPushMatrix();
-        ApplyTransformations();
-        DrawCylinder(1, 1, 10, 16, 16);
-        glPopMatrix();
     }
 };

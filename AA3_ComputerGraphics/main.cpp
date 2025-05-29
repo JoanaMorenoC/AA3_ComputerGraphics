@@ -29,7 +29,7 @@ void gameplayTimer(int value)
 {
     player.Update(keyStates, specialKeyStates, island.GetTreeColliders());
     glutPostRedisplay();
-    glutTimerFunc(10, gameplayTimer, 0);
+    glutTimerFunc(16, gameplayTimer, 0);
 }
 
 void lighting()

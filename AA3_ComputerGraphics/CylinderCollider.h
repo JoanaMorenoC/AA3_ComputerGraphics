@@ -17,16 +17,12 @@ public:
 
 	bool CollidesWith(CylinderCollider* other)
 	{
-		std::cout << "Player pos: (" << pos.x << ", " << pos.y << ", " << pos.z << ")";
-		std::cout << "Other pos: (" << other->GetPos().x << ", " << other->GetPos().y << ", " << other->GetPos().z << ")" << std::endl;
-
 		Vector3 distanceVector = pos - other->GetPos();
 		distanceVector.y = 0;
 
 		float distance = distanceVector.length();
 		float sumOfRadii = radius + other->GetRadius();
 
-		std::cout << "Distance: " << distance << " | Radii: " << sumOfRadii << std::endl;
 		if (distance >= sumOfRadii)
 			return false;
 
