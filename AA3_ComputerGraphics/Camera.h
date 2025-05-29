@@ -101,7 +101,7 @@ public:
             up.x, up.y, up.z);
     }
 
-    void ApplySpotlight(GLenum lightID = GL_LIGHT0)
+    void ApplySpotlight(GLenum lightID)
     {
         glEnable(lightID);
 

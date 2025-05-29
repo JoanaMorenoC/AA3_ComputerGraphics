@@ -56,9 +56,10 @@ void renderMinimap()
 {
     Pin pin;
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 2.f;
-    float coneHeightPin = 0.07f;
-    float posXZ[2] = { 0.0f,0.0f };
+    float circleRadiusPin = 1.f;
+    float coneHeightPin = 1.8f;
+    float posXZ[2] = { player.GetPos().x,
+    player.GetPos().z };
 
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
@@ -68,7 +69,7 @@ void renderMinimap()
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    gluPerspective(60.0, 1.0, 1.0, 100.0); // Proyecci�n con perspectiva
+    glOrtho(-10, 10, -10, 10, -10, 20); // más control
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -82,7 +83,9 @@ void renderMinimap()
     );
 
     drawObjects(); // Renderiza sin transformaciones de c�mara
+    glPushMatrix();
     pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
+    glPopMatrix();
     
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -99,9 +102,7 @@ int init(void)
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0.0f, 0.0f, 1.0f,
-        0.0f, 0.0f, 0.0f,
-        0.0f, 1.0f, 0.0f);
+
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -127,7 +128,8 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // --- C�mara principal ---
-    glMatrixMode(GL_MODELVIEW);
+
+    //glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 
     lighting(); // <- ahora aqu�, despu�s de colocar la c�mara principal
