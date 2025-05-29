@@ -51,10 +51,15 @@ public:
 
         for (int i = 0; i < TREES_AMOUNT; i++)
         {
-            trees.emplace_back(); // agrega el árbol directamente en el vector
-            trees.back().SetScale(totalScale * 0.06f);
-            trees.back().SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f));
-            treeColliders.push_back(trees.back().GetCollider());
+            Tree tree;
+            tree.SetScale(totalScale * 0.06f);
+
+            Vector3 position = GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f);
+            tree.SetPos(position);
+            trees.push_back(tree);
+
+            treeColliders.push_back(tree.GetCollider());
+            tree.GetCollider()->SetPos(position);
         }
     }
 

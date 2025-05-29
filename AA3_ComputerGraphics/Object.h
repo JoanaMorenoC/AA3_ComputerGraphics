@@ -117,6 +117,8 @@ public:
 	void SetPos(Vector3 newPos)
 	{
 		pos = newPos;
+		if (collider != nullptr)
+			collider->SetPos(newPos);
 	}
 
 	void SetScale(float newScale)

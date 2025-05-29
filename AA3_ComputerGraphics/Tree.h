@@ -10,7 +10,7 @@ private:
 public:
 
     Tree()
-        : Object(new CylinderCollider(&pos, 1)) { }
+        : Object(new CylinderCollider(pos, 1)) { }
 
     void Render() override
     {

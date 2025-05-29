@@ -18,7 +18,7 @@ private:
 
 public:
     Player()
-        : collider(&pos, 1)
+        : collider(pos, 1)
     {
 
     }
@@ -54,7 +54,7 @@ public:
         pos = camera.GetPos();
 
         CheckCollisions(colliders);
-        //camera.SetPos(pos);
+        camera.SetPos(pos);
 	}
 
     void ApplyFlashlight()
@@ -75,12 +75,12 @@ public:
 
         for (int i = 0; i < colliders.size(); i++)
         {
-            if (i != 0)
-                break;
-
+            std::cout << " I: " << i << std::endl;
             std::cout << "Player position: " << pos.x << " " << pos.y << std::endl;
 
             collider.CollidesWith(colliders[i]);
         }
+        pos = collider.GetPos();
+        std::cout << std::endl;
     }
 };
