@@ -58,8 +58,8 @@ void renderMinimap()
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
     float circleRadiusPin = 1.f;
     float coneHeightPin = 1.8f;
-    float posXZ[2] = { camera.GetPosition().x,
-    camera.GetPosition().z };
+    float posXZ[2] = { player.GetPos().x,
+    player.GetPos().z };
 
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
@@ -100,7 +100,7 @@ int init(void)
     glEnable(GL_DEPTH_TEST);
 
 
-    //glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
 
@@ -128,6 +128,7 @@ void display()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // --- C�mara principal ---
+
     //glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
 

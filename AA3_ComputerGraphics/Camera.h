@@ -101,7 +101,7 @@ public:
             up.x, up.y, up.z);
     }
 
-    void ApplySpotlight(GLenum lightID = GL_LIGHT0)
+    void ApplySpotlight(GLenum lightID)
     {
         glEnable(lightID);
 
@@ -126,10 +126,5 @@ public:
         GLfloat lightSpecular[] = { 0.002f, 0.002f, 0.002f, 1.0f };
         glLightfv(lightID, GL_DIFFUSE, lightDiffuse);
         glLightfv(lightID, GL_SPECULAR, lightSpecular);
-    }
-
-    Vector3 GetPosition()
-    {
-        return pos;
     }
 };

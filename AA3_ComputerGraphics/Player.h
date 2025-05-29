@@ -47,6 +47,7 @@ public:
         if (fPressedNow && !fKeyPreviouslyPressed)
         {
             flashlightOn = !flashlightOn;
+            glDisable(GL_LIGHT3);
         }
         fKeyPreviouslyPressed = fPressedNow;
 
@@ -59,8 +60,13 @@ public:
     {
         if (flashlightOn)
         {
-            camera.ApplySpotlight(GL_LIGHT2);
+            camera.ApplySpotlight(GL_LIGHT3);
         }
+    }
+
+    Vector3 GetPos()
+    {
+        return pos;
     }
 
     void SetPos(Vector3 newPos)
