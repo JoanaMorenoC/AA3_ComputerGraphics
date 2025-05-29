@@ -1,57 +1,44 @@
 #pragma once
-#include "Vector3.h"
+#include "Collider.h"
 
-class CylinderCollider
+class CylinderCollider : public Collider
 {
 private:
-	Vector3 pos;
-	float scale;
 	float radius;
 
 public:
 	CylinderCollider(Vector3 initialPos, float radiusToSet)
-		: pos(initialPos), radius(radiusToSet)
+		: Collider(pos), radius(radiusToSet)
 	{
 
 	}
 
-	bool CollidesWith(CylinderCollider* other)
+	bool CollidesWith(Collider* other)
 	{
-		Vector3 distanceVector = pos - other->GetPos();
-		distanceVector.y = 0;
+		if (CylinderCollider* otherCyl = dynamic_cast<CylinderCollider*>(other))
+		{
+			Vector3 distanceVector = pos - other->GetPos();
+			distanceVector.y = 0;
 
-		float distance = distanceVector.length();
-		float sumOfRadii = radius + other->GetRadius();
+			float distance = distanceVector.length();
+			float sumOfRadii = radius + otherCyl->GetRadius();
 
-		if (distance >= sumOfRadii)
-			return false;
+			if (distance >= sumOfRadii)
+				return false;
 
-		float intersectionDepth = sumOfRadii - distance;
-		Vector3 pushDirection = distanceVector.Normalized();
+			float intersectionDepth = sumOfRadii - distance;
+			Vector3 pushDirection = distanceVector.Normalized();
 
-		Vector3 newPos = pos + pushDirection * intersectionDepth;
-		pos = newPos;
+			Vector3 newPos = pos + pushDirection * intersectionDepth;
+			pos = newPos;
 
-		return true;
+			return true;
+		}
+		
 	}
 
 	float GetRadius()
 	{
 		return radius * scale;
-	}
-
-	Vector3 GetPos()
-	{
-		return pos;
-	}
-
-	void SetScale(float newScale)
-	{
-		scale = newScale;
-	}
-
-	void SetPos(Vector3 newPos)
-	{
-		pos = newPos;
 	}
 };

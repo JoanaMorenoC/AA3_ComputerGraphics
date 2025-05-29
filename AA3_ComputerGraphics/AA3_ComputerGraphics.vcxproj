@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Building.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="CylinderCollider.h" />
     <ClInclude Include="Island.h" />
     <ClInclude Include="Lighthouse.h" />
