@@ -24,7 +24,7 @@ class Island : public Object
     float waterSize = 10.f;
     Vector3 rockScale;
 
-    std::vector<CylinderCollider*> treeColliders;
+    std::vector<Collider*> colliders;
 
     Vector3 GetRandomPositionInsideGrass(float height, float minRadius, float maxRadius)
     {
@@ -58,7 +58,7 @@ public:
             tree.SetPos(position);
             trees.push_back(tree);
 
-            treeColliders.push_back(tree.GetCollider());
+            colliders.push_back(tree.GetCollider());
             tree.GetCollider()->SetPos(position);
         }
     }
@@ -117,9 +117,9 @@ public:
         return lighthouse;
     }
 
-    std::vector<CylinderCollider*> GetTreeColliders()
+    std::vector<Collider*> GetColliders()
     {
-        return treeColliders;
+        return colliders;
     }
 
     void SetWaterSize(float newSize)

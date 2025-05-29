@@ -23,7 +23,7 @@ public:
 
     }
 
-	void Update(bool (&keyStates)[256], bool(&specialKeyStates)[256], std::vector<CylinderCollider*> colliders)
+	void Update(bool (&keyStates)[256], bool(&specialKeyStates)[256], std::vector<Collider*> colliders)
 	{
         if (keyStates['w'] || keyStates['W'])
             camera.MoveForward();
@@ -75,7 +75,7 @@ public:
         camera.ApplyView();
     }
 
-    void CheckCollisions(std::vector<CylinderCollider*> colliders)
+    void CheckCollisions(std::vector<Collider*> colliders)
     {
         for (int i = 0; i < colliders.size(); i++)
         {
