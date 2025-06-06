@@ -96,7 +96,7 @@ void renderMinimap()
         0.0, 0.0, 0.0,    // hacia d�nde mira
         0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
     );
-
+    glDisable(GL_DEPTH_TEST);
     drawObjects(); // Renderiza sin transformaciones de c�mara
     glPushMatrix();
     for (Pin pin : pins)
@@ -105,7 +105,7 @@ void renderMinimap()
     playerPin.drawMapPin(playerCircleRadiusPin, playerConeHeightPin, colorPlayerPin);
 
     glPopMatrix();
-    
+    glEnable(GL_DEPTH_TEST);
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
