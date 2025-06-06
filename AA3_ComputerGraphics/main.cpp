@@ -60,8 +60,8 @@ void renderMinimap()
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
     float circleRadiusPin = 0.5f;
     float coneHeightPin = 1.f;
-    float posXZPlayer[2] = { camera.GetPosition().x,
-    camera.GetPosition().z };
+    float posXZPlayer[2] = { player.GetPos().x,
+    player.GetPos().z };
 
 
     float colorLighthousePin[3] = { 1.f, 1.f, 0.f };
