@@ -4,7 +4,10 @@
 
 class Pin
 {
-    void drawCircle(float radius, int segments, bool filled, float posXZ[2])
+private:
+    float posXZ[2] = { 0, 0 };
+
+    void drawCircle(float radius, int segments, bool filled)
     {
         float heightIcone = 0.5f;
         if (filled)
@@ -24,11 +27,16 @@ class Pin
     }
 
 public:
+    void setPosition(float newPos[2])
+    {
+        posXZ[0] = newPos[0];
+        posXZ[1] = newPos[1];
+    }
+    
     void drawMapPin(
         float circleRadius,
         float coneHeight,
-        const float color[3],
-        float posXZ[2]
+        const float color[3]
     )
     {
         glPushAttrib(GL_LIGHTING_BIT);
@@ -38,7 +46,7 @@ public:
         int circleSegments = 16;
         glPushMatrix();
         glColor3fv(color);
-        drawCircle(circleRadius, circleSegments, true, posXZ);
+        drawCircle(circleRadius, circleSegments, true);
         glPopMatrix();
 
         // --- Dibuja el cono apuntando hacia abajo ---

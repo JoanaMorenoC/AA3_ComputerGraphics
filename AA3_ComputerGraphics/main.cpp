@@ -17,6 +17,7 @@ bool keyStates[256] = { false };
 bool specialKeyStates[256] = { false };
 bool shiftPressed = false;
 
+std::vector<Pin> pins;
 
 void dayNightCycleTimer(int value)
 {
@@ -50,23 +51,31 @@ void drawObjects()
     glPopMatrix();
 }
 
-
+void setInteractablesPinPositions(std::vector<InteractableObject*> objects)
+{
+    for (InteractableObject* obj : objects)
+    {
+        Pin pin;
+        float position[2] = { obj->GetPos().x, obj->GetPos().z + 0.6 };
+        pin.setPosition(position);
+        pins.push_back(pin);
+    }
+}
 
 void renderMinimap()
-{
-    Pin pin;
-    Pin pinLighthouse;
+{  
+    Pin playerPin;
 
     float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 0.5f;
-    float coneHeightPin = 1.f;
+    float playerCircleRadiusPin = 0.5f;
+    float playerConeHeightPin = 1.f;
+    float interactableCircleRadiusPin = 0.3f;
+    float interactableConeHeightPin = 0.6f;
     float posXZPlayer[2] = { player.GetPos().x,
     player.GetPos().z };
+    playerPin.setPosition(posXZPlayer);
 
-
-    float colorLighthousePin[3] = { 1.f, 1.f, 0.f };
-    float posXZLighthouse[2] = { 0,
-    1.5f};
+    float colorInteractablePin[3] = { 1.f, 1.f, 0.f };
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
     glViewport(1280.0-200, 720-200, 200, 200); // Minimapa en esquina superior derecha
@@ -90,8 +99,11 @@ void renderMinimap()
 
     drawObjects(); // Renderiza sin transformaciones de c�mara
     glPushMatrix();
-    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZPlayer);
-    pinLighthouse.drawMapPin(circleRadiusPin, coneHeightPin, colorLighthousePin, posXZLighthouse);
+    for (Pin pin : pins)
+        pin.drawMapPin(interactableCircleRadiusPin, interactableConeHeightPin, colorInteractablePin);
+    
+    playerPin.drawMapPin(playerCircleRadiusPin, playerConeHeightPin, colorPlayerPin);
+
     glPopMatrix();
     
     glPopMatrix();
@@ -127,6 +139,8 @@ int init(void)
     moon.InitLighting();
 
     island.Init(3.f);
+
+    setInteractablesPinPositions(island.GetInteractableObjects());
 
     return 0;
 }

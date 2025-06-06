@@ -108,6 +108,11 @@ public:
 		return collider;
 	}
 
+	Vector3 GetPos()
+	{
+		return pos;
+	}
+
 	void SetPos(float x, float y, float z)
 	{
 		pos.x = x;
