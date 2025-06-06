@@ -16,6 +16,7 @@ private:
 
     bool flashlightOn = false;
     bool fKeyPreviouslyPressed = false;
+    bool eKeyPreviouslyPressed = false;
 
 	const float CAMERA_ROTATION_SPEED = 1.5f;
     const float MAX_DISTANCE_TO_SELECT = 1.3f;
@@ -99,7 +100,15 @@ public:
         SetPos(camera.GetPos());
 
         CheckCollisions(colliders);
+        
         CheckSelections(interactableObjects);
+        bool ePressedNow = keyStates['e'] || keyStates['E'];
+        if (ePressedNow && !eKeyPreviouslyPressed)
+        {
+            if (selectedObject != nullptr)
+                selectedObject->Interact();
+        }
+        eKeyPreviouslyPressed = ePressedNow;
 	}
 
     void ApplyFlashlight()

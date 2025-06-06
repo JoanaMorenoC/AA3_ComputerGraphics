@@ -49,8 +49,10 @@ public:
         glPopAttrib();
     }
 
-    void SetSelected(bool newState)
+    virtual void SetSelected(bool newState)
     {
         selected = newState;
     }
+
+    virtual void Interact() = 0;
 };
