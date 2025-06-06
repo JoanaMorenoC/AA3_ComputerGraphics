@@ -36,6 +36,11 @@ struct Vector3
 			x * other.y - y * other.x);
 	}
 
+	float Dot(const Vector3& other) const
+	{
+		return x * other.x + y * other.y + z * other.z;
+	}
+
 	Vector3 Normalized() const
 	{
 		float len = length();

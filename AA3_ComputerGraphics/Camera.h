@@ -50,6 +50,11 @@ public:
         return pos;
     }
 
+    Vector3 GetFront()
+    {
+        return front;
+    }
+
     void SetPos(Vector3 newPos)
     {
         pos = newPos;

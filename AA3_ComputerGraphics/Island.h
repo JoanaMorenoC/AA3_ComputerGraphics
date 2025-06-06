@@ -18,13 +18,14 @@ class Island : public Object
 
     Lighthouse lighthouse;
     Building building;
-    std::vector<Tree> trees;
+    std::vector<Tree*> trees;
     const int TREES_AMOUNT = 20;
 
     float waterSize = 10.f;
     Vector3 rockScale;
 
     std::vector<Collider*> colliders;
+    std::vector<InteractableObject*> interactableObjects;
 
     Vector3 GetRandomPositionInsideGrass(float height, float minRadius, float maxRadius)
     {
@@ -56,15 +57,17 @@ public:
 
         for (int i = 0; i < TREES_AMOUNT; i++)
         {
-            Tree tree;
-            tree.SetScale(totalScale * 0.06f);
+            Tree* tree = new Tree;
+            tree->SetScale(totalScale * 0.06f);
 
             Vector3 position = GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f);
-            tree.SetPos(position);
+            tree->SetPos(position);
             trees.push_back(tree);
 
-            colliders.push_back(tree.GetCollider());
-            tree.GetCollider()->SetPos(position);
+            colliders.push_back(tree->GetCollider());
+            tree->GetCollider()->SetPos(position);
+
+            interactableObjects.push_back(tree);
         }
     }
 
@@ -115,7 +118,7 @@ public:
         lighthouse.Render();
         building.Render();
         for (int i = 0;i < trees.size(); i++)
-            trees[i].Render();
+            trees[i]->Render();
     }
 
     Lighthouse &GetLighthouse()
@@ -126,6 +129,11 @@ public:
     std::vector<Collider*> GetColliders()
     {
         return colliders;
+    }
+
+    std::vector<InteractableObject*> GetInteractableObjects()
+    {
+        return interactableObjects;
     }
 
     void SetWaterSize(float newSize)
