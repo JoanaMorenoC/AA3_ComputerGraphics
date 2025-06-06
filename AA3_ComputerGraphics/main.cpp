@@ -55,12 +55,18 @@ void drawObjects()
 void renderMinimap()
 {
     Pin pin;
-    float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
-    float circleRadiusPin = 1.f;
-    float coneHeightPin = 1.8f;
-    float posXZ[2] = { player.GetPos().x,
-    player.GetPos().z };
+    Pin pinLighthouse;
 
+    float colorPlayerPin[3] = { 1.f, 0.3, 0.4 };
+    float circleRadiusPin = 0.5f;
+    float coneHeightPin = 1.f;
+    float posXZPlayer[2] = { camera.GetPosition().x,
+    camera.GetPosition().z };
+
+
+    float colorLighthousePin[3] = { 1.f, 1.f, 0.f };
+    float posXZLighthouse[2] = { 0,
+    1.5f};
 
     glPushAttrib(GL_VIEWPORT_BIT);  // Guarda el viewport original
     glViewport(1280.0-200, 720-200, 200, 200); // Minimapa en esquina superior derecha
@@ -69,7 +75,7 @@ void renderMinimap()
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-    glOrtho(-10, 10, -10, 10, -10, 20); // más control
+    glOrtho(-8, 8, -8, 8, -8, 15); // más control
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
@@ -77,14 +83,15 @@ void renderMinimap()
 
     // C�mara desde arriba mirando hacia abajo
     gluLookAt(
-        0.0, 12.0, 0.0,   // posici�n de la c�mara (elevada)
+        0.0, 3, 0.0,   // posici�n de la c�mara (elevada)
         0.0, 0.0, 0.0,    // hacia d�nde mira
         0.0, 0.0, 1.0     // "arriba" es hacia el eje Z
     );
 
     drawObjects(); // Renderiza sin transformaciones de c�mara
     glPushMatrix();
-    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZ);
+    pin.drawMapPin(circleRadiusPin, coneHeightPin, colorPlayerPin, posXZPlayer);
+    pinLighthouse.drawMapPin(circleRadiusPin, coneHeightPin, colorLighthousePin, posXZLighthouse);
     glPopMatrix();
     
     glPopMatrix();
@@ -110,6 +117,7 @@ int init(void)
 
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT2);
 
     glEnable(GL_COLOR_MATERIAL);
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
