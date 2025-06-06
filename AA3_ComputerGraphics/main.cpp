@@ -29,7 +29,7 @@ void dayNightCycleTimer(int value)
 
 void gameplayTimer(int value)
 {
-    player.Update(keyStates, specialKeyStates, island.GetColliders());
+    player.Update(keyStates, specialKeyStates, island.GetColliders(), island.GetInteractableObjects());
     glutPostRedisplay();
     glutTimerFunc(16, gameplayTimer, 0);
 }

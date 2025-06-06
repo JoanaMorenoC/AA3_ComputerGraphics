@@ -18,13 +18,14 @@ class Island : public Object
 
     Lighthouse lighthouse;
     Building building;
-    std::vector<Tree> trees;
+    std::vector<Tree*> trees;
     const int TREES_AMOUNT = 20;
 
     float waterSize = 10.f;
     Vector3 rockScale;
 
     std::vector<Collider*> colliders;
+    std::vector<InteractableObject*> interactableObjects;
 
     Vector3 GetRandomPositionInsideGrass(float height, float minRadius, float maxRadius)
     {
@@ -43,23 +44,30 @@ public:
         SetScale(totalScale * 0.2f);
 
         float islandFloorHeight = totalScale * 0.1f;
-        lighthouse.SetPos(pos + Vector3(0.f, islandFloorHeight, 0.f));
+
+        Vector3 lighthousePos = pos + Vector3(0.f, islandFloorHeight, 0.f);
+        lighthouse.SetPos(lighthousePos);
         lighthouse.SetScale(totalScale * 0.1f);
+        colliders.push_back(lighthouse.GetCollider());
+        lighthouse.GetCollider()->SetPos(lighthousePos);
+
         building.SetPos(GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.6f, totalScale * 1.2f));
         building.SetScale(totalScale * 0.5f);
         rockScale = Vector3(1.0f, 0.5f, 0.8f);
 
         for (int i = 0; i < TREES_AMOUNT; i++)
         {
-            Tree tree;
-            tree.SetScale(totalScale * 0.06f);
+            Tree* tree = new Tree;
+            tree->SetScale(totalScale * 0.06f);
 
             Vector3 position = GetRandomPositionInsideGrass(islandFloorHeight, totalScale * 0.3f, totalScale * 1.4f);
-            tree.SetPos(position);
+            tree->SetPos(position);
             trees.push_back(tree);
 
-            colliders.push_back(tree.GetCollider());
-            tree.GetCollider()->SetPos(position);
+            colliders.push_back(tree->GetCollider());
+            tree->GetCollider()->SetPos(position);
+
+            interactableObjects.push_back(tree);
         }
     }
 
@@ -69,13 +77,13 @@ public:
         ApplyTransformations();
 
         // --- Water ---
-        /*
+        
         glPushMatrix();
         SetColor(WATER);
         glTranslatef(0.0f, -1.5f-5.f, 0.0f);
         glScalef(100.0f, waterSize, 100.0f);
         glutSolidCube(1.0);
-        glPopMatrix();*/
+        glPopMatrix();
 
         // --- Sand ---
         glPushMatrix();
@@ -110,7 +118,7 @@ public:
         lighthouse.Render();
         building.Render();
         for (int i = 0;i < trees.size(); i++)
-            trees[i].Render();
+            trees[i]->Render();
     }
 
     Lighthouse &GetLighthouse()
@@ -121,6 +129,11 @@ public:
     std::vector<Collider*> GetColliders()
     {
         return colliders;
+    }
+
+    std::vector<InteractableObject*> GetInteractableObjects()
+    {
+        return interactableObjects;
     }
 
     void SetWaterSize(float newSize)
